@@ -1,18 +1,18 @@
 # Rúbrica de evaluación
 
-Rúbrica transparente: así revisamos tu entrega. Total 100 puntos.
+Rúbrica transparente: así revisamos tu entrega. Total 100 puntos. El alcance está calibrado para **~1 hora**, así que la rúbrica premia lo esencial bien hecho.
 
 | # | Dimensión | Peso | Qué miramos |
 |---|---|---:|---|
-| 1 | **Correctitud del CRUD** | 25 | Los 5 endpoints funcionan; los status HTTP son los adecuados; el CRUD opera end-to-end. |
-| 2 | **Reglas de negocio** | 20 | Máx. 6 miembros, sin especies duplicadas, validación contra PokeAPI reutilizando el servicio, ownership (404 al tocar equipos ajenos). |
-| 3 | **Calidad y consistencia del código** | 20 | Sigue el patrón existente (capas, `HttpError`, `asyncHandler`, ownership scoping); legible; sin duplicar lógica ya disponible. |
+| 1 | **Correctitud del endpoint** | 30 | Los 3 endpoints (`GET`/`POST`/`DELETE /api/teams`) funcionan end-to-end con los status HTTP adecuados. |
+| 2 | **Reglas de negocio** | 25 | Máx. 6 miembros (422), validación contra PokeAPI **reutilizando** el servicio (422), ownership (404 al tocar equipos ajenos). |
+| 3 | **Calidad y consistencia del código** | 20 | Sigue el patrón existente (capas, `HttpError`, `asyncHandler`, scoping por `req.user.id`); legible; sin duplicar lógica ya disponible. |
 | 4 | **Documentación de uso de IA** | 15 | `docs/AI_USAGE.md` completo y honesto; se nota criterio al aceptar/rechazar/corregir output de IA. |
-| 5 | **Tests** | 10 | Al menos 1–2 tests significativos que pasan; cubren al menos una regla de negocio. |
-| 6 | **Frontend** | 10 | Pantalla de Teams funcional y legible que consume la API; reutiliza el cliente existente. |
+| 5 | **Test** | 10 | Al menos 1 test que pasa y cubre creación válida o el rechazo de una regla. |
 
 ## Señales que suman (bonus, sin exceder 100)
 
+- Elementos de la sección **Bonus** del reto: endpoints extra, regla de "sin duplicados" (409), o la pantalla de Equipos en el frontend.
 - Manejo cuidado de errores y mensajes claros.
 - Notar y respetar el rate-limit / caché de la PokeAPI.
 - Buenos mensajes de commit (Conventional Commits) e historial limpio.

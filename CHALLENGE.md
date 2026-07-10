@@ -4,6 +4,8 @@
 
 No buscamos que reinventes el proyecto: buscamos ver criterio, calidad, consistencia con lo que ya existe y buena comunicación.
 
+> ⏱️ **Alcance pensado para ~1 hora.** Es intencionalmente pequeño. Preferimos poco código bien hecho, consistente con lo existente y bien documentado, que una entrega grande y descuidada. Si algo te llevaría demasiado, **déjalo como "qué haría con más tiempo"** en el PR.
+
 ---
 
 ## Contexto
@@ -14,44 +16,40 @@ El repositorio ya trae un boilerplate **funcional**: autenticación por JWT y un
 
 Un módulo nuevo de **Equipos Pokémon (Teams)**, análogo a Favoritos pero con reglas de negocio propias. **No modifiques el módulo de Favoritos**; créalo en paralelo.
 
-### Backend — CRUD HTTP bajo `/api/teams`
+### Parte obligatoria — Backend `/api/teams` (esto es lo que evaluamos)
 
 Un usuario autenticado puede administrar sus equipos. Un equipo tiene un **nombre** y una lista de **miembros** (pokémon).
 
 Modelo sugerido (puedes ajustarlo y justificarlo):
 - `Team`: `id`, `name`, `userId`
-- `TeamMember`: `id`, `teamId`, `pokemonId`, `pokemonName`, `slot` (1–6)
+- `TeamMember`: `id`, `teamId`, `pokemonId`, `pokemonName`
 
-Endpoints mínimos:
+Bastan **3 endpoints**:
 
 | Método | Ruta | Descripción |
 |---|---|---|
 | GET | `/api/teams` | Lista los equipos del usuario (con sus miembros) |
-| GET | `/api/teams/:id` | Detalle de un equipo |
-| POST | `/api/teams` | Crea un equipo (nombre + miembros iniciales opcionales) |
-| PATCH | `/api/teams/:id` | Renombra el equipo y/o actualiza sus miembros |
-| DELETE | `/api/teams/:id` | Elimina el equipo |
+| POST | `/api/teams` | Crea un equipo (`name` + arreglo de pokémon) |
+| DELETE | `/api/teams/:id` | Elimina un equipo del usuario |
 
-### Reglas de negocio (parte central del reto)
+**Reglas de negocio obligatorias** (son el corazón del reto):
 
-1. **Máximo 6 miembros** por equipo (como en los juegos de Pokémon).
-2. **Sin especies duplicadas** dentro de un mismo equipo.
-3. **Validación contra la PokeAPI**: cada pokémon agregado debe existir. **Reutiliza** el servicio existente `backend/src/services/pokeapi.service.js` (`assertSpeciesExists`), no reimplementes el consumo de la API.
-4. **Ownership**: un usuario sólo puede ver/editar/eliminar **sus** equipos. Intentar tocar el equipo de otro debe responder `404` (no `403`, para no filtrar existencia).
-5. Errores con el **status HTTP correcto** (400/401/404/409/422 según corresponda), consistente con el manejo de errores actual (`HttpError`).
+1. **Máximo 6 miembros** por equipo → si se excede, responde `422`.
+2. **Validación contra la PokeAPI**: cada pokémon debe existir. **Reutiliza** el servicio `backend/src/services/pokeapi.service.js` (`assertSpeciesExists`); **no** reimplementes el consumo de la API. Si no existe → `422`.
+3. **Ownership**: un usuario sólo ve/elimina **sus** equipos. Intentar borrar el de otro debe responder `404` (no `403`, para no filtrar existencia).
 
-### Frontend — una pantalla de Equipos
+Usa los status HTTP adecuados y el manejo de errores existente (`HttpError`, `asyncHandler`).
 
-Con React + TypeScript (mira `frontend/src/pages/Favorites.tsx` como patrón):
-- Listar los equipos del usuario y sus miembros.
-- Crear un equipo y agregarle pokémon.
-- Eliminar un equipo.
+### Test (obligatorio, sólo 1)
 
-No necesita ser bonito; necesita **funcionar y ser legible**. Puedes reutilizar el cliente `frontend/src/api/client.ts`.
+**Un** test (jest + supertest) siguiendo el estilo de `backend/src/tests/favorites.test.js`, que cubra **una** regla de negocio: la creación válida de un equipo **o** el rechazo del 7º miembro. Con eso basta.
 
-### Tests
+### Bonus (opcional — sólo si te sobra tiempo)
 
-Al menos **1–2 tests** del módulo (jest + supertest), siguiendo el estilo de `backend/src/tests/favorites.test.js`. Como mínimo cubre: creación válida, y el rechazo de una regla de negocio (p. ej. el 7º miembro, o especie duplicada).
+No es obligatorio y no penaliza omitirlo. Si quieres mostrar más, elige lo que prefieras:
+- Endpoints extra (`GET /api/teams/:id`, `PATCH /api/teams/:id`).
+- Regla extra: **sin especies duplicadas** dentro de un equipo (`409`).
+- Una **pantalla de Equipos** en el frontend (React + TS) siguiendo `frontend/src/pages/Favorites.tsx`, reutilizando `frontend/src/api/client.ts`.
 
 ---
 
@@ -77,7 +75,7 @@ Un uso de IA honesto y bien razonado suma; un copy-paste sin criterio resta.
 4. Abre un **Pull Request** hacia `main` de tu repo, llenando la plantilla de PR.
 5. Comparte el enlace del PR con quien te contactó.
 
-**Criterios de aceptación mínimos**: el backend levanta, `npm test` pasa (incluyendo tus tests), el CRUD funciona end-to-end y `docs/AI_USAGE.md` está completo.
+**Criterios de aceptación mínimos**: el backend levanta, `npm test` pasa (incluyendo tu test), los 3 endpoints funcionan con sus reglas y `docs/AI_USAGE.md` está completo.
 
 ## Cómo te evaluamos
 
@@ -85,7 +83,7 @@ La rúbrica completa y transparente está en [`docs/EVALUATION.md`](./docs/EVALU
 
 ## Tiempo estimado
 
-Alrededor de **4–6 horas**. No hay reloj corriendo, pero valoramos entregas enfocadas. Si algo te toma demasiado, documenta el trade-off en el PR en lugar de sobre-ingenierizar.
+Alrededor de **1 hora**. No hay reloj corriendo, pero el alcance está calibrado para eso: no sobre-inviertas. Si una idea te llevaría más, anótala en el PR como "qué haría con más tiempo" en vez de implementarla.
 
 ## Preguntas
 
