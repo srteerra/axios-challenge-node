@@ -72,6 +72,7 @@ export function Favorites() {
   }
 
   async function removeFavorite(fav: Favorite) {
+    if (!confirm(`¿Seguro que quieres quitar a ${fav.pokemonName} de favoritos?`)) return;
     await api.del(`/favorites/${fav.id}`);
     await loadFavorites();
   }
@@ -128,6 +129,7 @@ export function Favorites() {
   }
 
   async function removeTeam(team: Team) {
+    if (!confirm(`¿Seguro que quieres eliminar el equipo "${team.name}"?`)) return;
     await api.del(`/teams/${team.id}`);
     await loadTeams();
   }
