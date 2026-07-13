@@ -97,6 +97,36 @@ export function Favorites() {
     }
   }
 
+  async function updateTeam(team: Team) {
+    try {
+      const name = prompt('Nuevo nombre del equipo:', team.name);
+      if (name === null) return;
+
+      const raw = prompt(
+        'Pokémon del equipo, separados por coma (máx. 6):',
+        team.members.map((m) => m.pokemonName).join(', '),
+      );
+
+      if (raw === null) return;
+
+      const members = raw
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      const payload: { name?: string; members?: string[] } = {};
+
+      if (name.trim()) payload.name = name.trim();
+      if (members.length > 0) payload.members = members;
+
+      await api.patch(`/teams/${team.id}`, payload);
+      await loadTeams();
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al actualizar equipo');
+    }
+  }
+
   async function removeTeam(team: Team) {
     await api.del(`/teams/${team.id}`);
     await loadTeams();
@@ -129,6 +159,7 @@ export function Favorites() {
         {teams.map((team) => (
           <li key={team.id}>
             {team.name} {' '}
+            <button onClick={() => updateTeam(team)}>editar</button>{' '}
             <button onClick={() => removeTeam(team)}>eliminar equipo</button>
             <ul>
               {team.members.map((member) => (
