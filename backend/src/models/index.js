@@ -9,8 +9,6 @@ const Favorite = initFavoriteModel(sequelize);
 const Team = initTeamModel(sequelize);
 const TeamMember = initTeamMemberModel(sequelize);
 
-// Asociaciones
-// Un usuario tiene muchos favoritos; cada favorito pertenece a un usuario.
 User.hasMany(Favorite, { foreignKey: 'userId', as: 'favorites', onDelete: 'CASCADE' });
 Favorite.belongsTo(User, { foreignKey: 'userId', as: 'user' });
 

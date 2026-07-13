@@ -1,7 +1,7 @@
 import { asyncHandler } from '../utils/async-handler.js';
 import { HttpError } from '../utils/http-error.js';
 import * as pokeapi from '../services/pokeapi.service.js';
-import {sequelize, Team, TeamMember} from '../models/index.js';
+import { sequelize, Team, TeamMember } from '../models/index.js';
 
 /**
  * Valida una lista de miembros contra la PokeAPI y devuelve las especies (id + nombre).
