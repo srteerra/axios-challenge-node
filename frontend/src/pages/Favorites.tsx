@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api/client';
-import { useAuth } from '../context/AuthContext';
 
 interface Favorite {
   id: number;
@@ -19,7 +18,6 @@ interface PokemonListItem {
  * para el módulo Teams.
  */
 export function Favorites() {
-  const { logout } = useAuth();
   const [pokemon, setPokemon] = useState<PokemonListItem[]>([]);
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +51,7 @@ export function Favorites() {
   }
 
   async function removeFavorite(fav: Favorite) {
+    if (!confirm(`¿Seguro que quieres quitar a ${fav.pokemonName} de favoritos?`)) return;
     await api.del(`/favorites/${fav.id}`);
     await loadFavorites();
   }
@@ -61,7 +60,6 @@ export function Favorites() {
     <div style={{ maxWidth: 640, margin: '40px auto', fontFamily: 'system-ui' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h1>Pokédex — Favoritos</h1>
-        <button onClick={logout}>Salir</button>
       </div>
       {error && <p style={{ color: 'crimson' }}>{error}</p>}
 
